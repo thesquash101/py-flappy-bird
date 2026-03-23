@@ -27,6 +27,19 @@ def main(stdscr):
             gameEnd()
 
     def gameEnd():
+        stdscr.addstr("Game Over\n")
+        stdscr.addstr("Your score was: " + score)
+        stdscr.addstr("Press q to exit...")
+
+        quit = stdscr.getch()
+        
+        # Call global from top
+        global running
+
+        if quit == ord('q'):
+            running = False
+        elif quit == ord('q'):
+            stdscr.addstr("Press q to exit...")
         
 
     while running:
