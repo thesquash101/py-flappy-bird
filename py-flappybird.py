@@ -9,11 +9,17 @@ score = 0
 charPositionX = 10; 
 charPositionY = 5; 
 
+# Pipe variables
+pipeWidth = 4
+pipeGap = 8
+pipeSpeed = 1
+pipeRand = []
+
 def main(stdscr):
-    curses.cursSet(0)
+    curses.curs_set(0)
     
-    curses.startColor()
-    curses.initPair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.start_color()
+    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
     def drawBird():
         """Draw the bird"""
@@ -22,6 +28,26 @@ def main(stdscr):
         except curses.error:
             pass  # Ignore if out of bounds
 
+    def drawPipe(self):
+        for pipe in self.pipes:
+            pipe_x = pipeRand['x']
+
+            # Top pipe // Review code (AI)
+            for y in range(pipe['top_height']):
+                try:
+                    self.stdscr.addch(y, pipe_x, '|', curses.color_pair(2))
+                    self.stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(2))
+                except curses.error:
+                    pass
+
+            # Bottom pipe // review
+            for y in range(pipe['bottom_start'], self.height - 1):
+                try:
+                    self.stdscr.addch(y, pipe_x, '|', curses.color_pair(2))
+                    self.stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(2))
+                except curses.error:
+                    pass
+                
     def checkBounds():
         if (charPositionY == 0 or charPositionY == 10):
             gameEnd()
