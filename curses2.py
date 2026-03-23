@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import curses
 from curses import wrapper
 
@@ -22,7 +23,7 @@ def main(stdscr):
             stdscr.addstr("\nYou pressed the UP key")
         
         stdscr.refresh()
-
+    
 # Run
 if __name__ == "__main__":
     wrapper(main)

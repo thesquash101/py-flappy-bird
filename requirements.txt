@@ -1,0 +1,5 @@
+# Flappy Bird CLI Game Requirements
+# This game uses only standard library modules
+# - curses (built-in)
+# - random (built-in)
+# - time (built-in)
