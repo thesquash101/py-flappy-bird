@@ -74,7 +74,8 @@ def main(stdscr):
         stdscr.refresh()
 
         drawBird()
-
+        drawPipe()
+        
         c = stdscr.getch()
         
         if c == ord('q'):
