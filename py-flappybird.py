@@ -48,20 +48,21 @@ def main(stdscr):
                 except curses.error:
                     pass
                 
-    def checkBounds():
-        if (charPositionY == 0 or charPositionY == 10):
-            gameEnd()
+    # def checkBounds():
+    #     if (charPositionY == 0 or charPositionY == 10):
+    #         gameEnd()
 
     def gameEnd():
+        global score
         stdscr.addstr("Game Over\n")
-        stdscr.addstr("Your score was: " + score)
+        stdscr.addstr("Your score was: " + str(score) + "\n")
         stdscr.addstr("Press q to exit...")
 
         quit = stdscr.getch()
         
         # Call global from top
         global running
-
+        running = False
         if quit == ord('q'):
             running = False
         elif quit == ord('q'):
@@ -69,20 +70,33 @@ def main(stdscr):
         
 
     while running:
+        stdscr.nodelay(True)
         curses.curs_set(0)  # Hide cursor
         stdscr.clear()
         stdscr.refresh()
+        global charPositionY
 
         drawBird()
-        drawPipe()
+        # drawPipe()
         
         c = stdscr.getch()
-        
-        if c == ord('q'):
+
+        if c == -1:
+            # No key pressed
+            charPositionY += 1  # gravity (or do nothing)
+
+        elif c == ord('q'):
             break
-        elif c == curses.KEY_UP or ord(' '):
-            stdscr.addstr("\nJUMP")
+
+        elif c == curses.KEY_UP or c == ord(' '):
+            charPositionY -= 4
+        
         stdscr.refresh()
+
+        if charPositionY <= 0 or charPositionY >= 12:
+            print("bird y: " + str(charPositionY) + "\n")
+            gameEnd()
+
 
         # Game speed
         time.sleep(0.2)
