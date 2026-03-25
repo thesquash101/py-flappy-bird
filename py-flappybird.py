@@ -49,10 +49,6 @@ def main(stdscr):
                     stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(1))
                 except curses.error:
                     pass
-                
-    # def checkBounds():
-    #     if (charPositionY == 0 or charPositionY == 10):
-    #         gameEnd()
 
     def updatePipe():
         global score
@@ -79,20 +75,20 @@ def main(stdscr):
             gameEnd()
 
     def gameEnd():
-        global score
-        stdscr.addstr("Game Over\n")
-        stdscr.addstr("Your score was: " + str(score) + "\n")
-        stdscr.addstr("Press q to exit...")
-        quit = stdscr.getch()
-        
-        # Call global from top
-        global running
+        global score, running
+
+        stdscr.nodelay(False)  # 👈 THIS is the key fix
+
+        stdscr.clear()
+
+        stdscr.addstr(5, 5, "Game Over")
+        stdscr.addstr(6, 5, "Your score was: " + str(score))
+        stdscr.addstr(7, 5, "Press any key to exit...")
+
+        stdscr.refresh()
+        stdscr.getch()  # now this will actually wait
+
         running = False
-        if quit == ord('q'):
-            running = False
-        elif quit == ord('q'):
-            stdscr.addstr("Press q to exit...")
-        
 
     while running:
         stdscr.nodelay(True)
@@ -119,10 +115,11 @@ def main(stdscr):
         
         stdscr.refresh()
 
-        if charPositionY <= 0 or charPositionY >= 12:
+        if charPositionY <= 0 or charPositionY >= height:
             print("bird y: " + str(charPositionY) + "\n")
             gameEnd()
 
+        score += 1
 
         # Game speed
         time.sleep(0.2)
