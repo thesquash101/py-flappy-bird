@@ -13,9 +13,11 @@ charPositionY = 5;
 pipeWidth = 4
 pipeGap = 8
 pipeSpeed = 1
-pipeRand = []
+pipes = []
 
 def main(stdscr):
+    height, width = stdscr.getmaxyx()
+    global pipes, score
     curses.curs_set(0)
     
     curses.start_color()
@@ -28,23 +30,23 @@ def main(stdscr):
         except curses.error:
             pass  # Ignore if out of bounds
 
-    def drawPipe(self):
-        for pipe in self.pipes:
-            pipe_x = pipeRand['x']
+    def drawPipe():
+        for pipe in pipes:
+            pipe_x = pipe['x']
 
             # Top pipe // Review code (AI)
             for y in range(pipe['top_height']):
                 try:
-                    self.stdscr.addch(y, pipe_x, '|', curses.color_pair(2))
-                    self.stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(2))
+                    stdscr.addch(y, pipe_x, '|', curses.color_pair(1))
+                    stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(1))
                 except curses.error:
                     pass
 
             # Bottom pipe // review
-            for y in range(pipe['bottom_start'], self.height - 1):
+            for y in range(pipe['bottom_start'], height - 1):
                 try:
-                    self.stdscr.addch(y, pipe_x, '|', curses.color_pair(2))
-                    self.stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(2))
+                    stdscr.addch(y, pipe_x, '|', curses.color_pair(1))
+                    stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(1))
                 except curses.error:
                     pass
                 
@@ -52,12 +54,35 @@ def main(stdscr):
     #     if (charPositionY == 0 or charPositionY == 10):
     #         gameEnd()
 
+    def updatePipe():
+        global score
+        # Move pipes
+        for pipe in pipes[:]:
+            pipe['x'] -= pipeSpeed
+            if pipe['x'] + pipeWidth < 0:
+                pipes.remove(pipe)
+                score += 1
+
+        height, width = stdscr.getmaxyx()
+
+        if not pipes or pipes[-1]['x'] < width - 20:
+            top_height = random.randint(2, height - pipeGap - 2)
+            bottom_start = top_height + pipeGap
+            pipes.append({
+                'x': width - 1,
+                'top_height': top_height,
+                'bottom_start': bottom_start
+            })
+
+    def checkBounds():
+        if (charPositionY == 0 or charPositionY == 10):
+            gameEnd()
+
     def gameEnd():
         global score
         stdscr.addstr("Game Over\n")
         stdscr.addstr("Your score was: " + str(score) + "\n")
         stdscr.addstr("Press q to exit...")
-
         quit = stdscr.getch()
         
         # Call global from top
@@ -77,8 +102,9 @@ def main(stdscr):
         global charPositionY
 
         drawBird()
-        # drawPipe()
-        
+        drawPipe()
+        updatePipe()
+
         c = stdscr.getch()
 
         if c == -1:
