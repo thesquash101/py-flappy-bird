@@ -48,7 +48,7 @@ def main(stdscr):
                     stdscr.addch(y, pipe_x, '|', curses.color_pair(1))
                     stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(1))
                 except curses.error:
-                    pass
+                    pass                
 
     def updatePipe():
         global score
@@ -70,6 +70,12 @@ def main(stdscr):
                 'bottom_start': bottom_start
             })
 
+    def checkCollision():
+        for pipe in pipes[:]:
+                if charPositionX >= pipe['x'] and charPositionX <= pipe['x'] + pipeWidth:
+                    if charPositionY < pipe['top_height'] or charPositionY >= pipe['bottom_start']:
+                        gameEnd()
+            
     def checkBounds():
         if (charPositionY == 0 or charPositionY == 10):
             gameEnd()
@@ -77,7 +83,7 @@ def main(stdscr):
     def gameEnd():
         global score, running
 
-        stdscr.nodelay(False)  # 👈 THIS is the key fix
+        stdscr.nodelay(False)
 
         stdscr.clear()
 
@@ -100,6 +106,7 @@ def main(stdscr):
         drawBird()
         drawPipe()
         updatePipe()
+        checkCollision()
 
         c = stdscr.getch()
 
@@ -122,7 +129,7 @@ def main(stdscr):
         score += 1
 
         # Game speed
-        time.sleep(0.2)
+        time.sleep(0.1)
     
 # Run
 if __name__ == "__main__":
