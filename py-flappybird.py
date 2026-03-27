@@ -48,7 +48,8 @@ def main(stdscr):
                     stdscr.addch(y, pipe_x, '|', curses.color_pair(1))
                     stdscr.addch(y, pipe_x + 1, '|', curses.color_pair(1))
                 except curses.error:
-                    pass                
+                    pass
+                
 
     def updatePipe():
         global score
@@ -75,26 +76,24 @@ def main(stdscr):
                 if charPositionX >= pipe['x'] and charPositionX <= pipe['x'] + pipeWidth:
                     if charPositionY < pipe['top_height'] or charPositionY >= pipe['bottom_start']:
                         gameEnd()
-            
-    def checkBounds():
-        if (charPositionY == 0 or charPositionY == 10):
-            gameEnd()
 
     def gameEnd():
-        global score, running
+        global running
+        try:
+            global score
+            stdscr.addstr(3, 3, "Game Over\n")
+            stdscr.addstr(4, 3, "Your score was: " + str(score) + "\n")
+            stdscr.addstr(5, 3, "Press q to exit...")
+        except curses.error:
+            pass
 
-        stdscr.nodelay(False)
+        # The Loop: Pause and wait for 'q'
+        while True:
+            char = stdscr.getch()
+            if char == ord('q'):
+                break
+            running = False
 
-        stdscr.clear()
-
-        stdscr.addstr(5, 5, "Game Over")
-        stdscr.addstr(6, 5, "Your score was: " + str(score))
-        stdscr.addstr(7, 5, "Press any key to exit...")
-
-        stdscr.refresh()
-        stdscr.getch()  # now this will actually wait
-
-        running = False
 
     while running:
         stdscr.nodelay(True)
@@ -123,10 +122,8 @@ def main(stdscr):
         stdscr.refresh()
 
         if charPositionY <= 0 or charPositionY >= height:
-            print("bird y: " + str(charPositionY) + "\n")
             gameEnd()
 
-        score += 1
 
         # Game speed
         time.sleep(0.1)
