@@ -7,13 +7,13 @@ import time
 running = True
 
 # Player one
-char1PositionX = 10 
+char1PositionX = 14 
 char1PositionY = 5 
 player1Alive = True
 scoreP1 = 0
 
 # Player two
-char2PositionX = 8
+char2PositionX = 7
 char2PositionY = 5
 player2Alive = True
 scoreP2 = 0
@@ -40,7 +40,7 @@ def main(stdscr):
                 stdscr.addch(char1PositionY, char1PositionX, 'O', curses.color_pair(1) | curses.A_BOLD)
             
             if (player2Alive):
-                stdscr.addch(char2PositionY, char2PositionX, 'O', curses.color_pair(1) | curses.A_BOLD)
+                stdscr.addch(char2PositionY, char2PositionX, 'X', curses.color_pair(1) | curses.A_BOLD)
                 
         except curses.error:
             pass  # Ignore if out of bounds
@@ -148,7 +148,7 @@ def main(stdscr):
             scoreP2 += 1
         else:
             scoreP1 += 1
-            scoreP2 += 2
+            scoreP2 += 1
 
         stdscr.nodelay(True)
         curses.curs_set(0)  # Hide cursor
