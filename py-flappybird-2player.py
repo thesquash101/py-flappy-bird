@@ -168,7 +168,7 @@ def main(stdscr):
             char1PositionY += 1  # gravity (or do nothing)
         else:
             # Key pressed
-            char1PositionY -= 4
+            char1PositionY -= 3
 
         if (c != ord(' ')):
             # Key not pressed
